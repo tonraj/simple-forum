@@ -47,7 +47,7 @@ class QuestionController extends Controller
         });
 
         if($query != null){
-            $build = $build->where('subject', 'like', '%' . $query . '%');
+            $build = $build->where('title', 'like', '%' . $query . '%');
         }
 
         if($order == "latest_question"){
@@ -58,7 +58,7 @@ class QuestionController extends Controller
             $build = $build->orderBy('updated_at','DESC');
         }
 
-        $question = $build->paginate(1);
+        $question = $build->paginate(20);
 
         $category = CategoryModel::find($id);
 
@@ -95,6 +95,9 @@ class QuestionController extends Controller
                 $form = $this->validate($request, [
                     'comment' => 'required|max:255',
                     'name' => 'required|max:255',
+                ],[   
+                    'comment.required'    => 'Please write your answer.',
+                    'name.required' => 'Please enter your name.',
                 ]);
     
                 ReplyModel::create([
@@ -110,7 +113,7 @@ class QuestionController extends Controller
                 $question->save();
                 
 
-                return view('view_question', ["categories" => $cat_array, "question" => $question, "replies" => $replies ])->withSuccess("Answer posted.");
+                return view('view_question', ["categories" => $cat_array, "question" => $question, "replies" => $replies ])->withSuccess("Your Answer has been posted.");
     
             }
 
@@ -120,6 +123,11 @@ class QuestionController extends Controller
                     'comment_id' => 'required|exists:reply,id',
                     'comment' => 'required|max:255',
                     'name' => 'required|max:255',
+                ],[   
+                    'comment_id.required'    => 'Comment id is invalid.',
+                    'comment_id.exists'      => 'Replying comment does not exist.',
+                    'comment.required' => 'Please write your reply.',
+                    'name.required' => 'Please enter your name.',
                 ]);
     
                 ReplyReply::create([
@@ -134,7 +142,7 @@ class QuestionController extends Controller
                 $question->updated_at = Carbon::now();
                 $question->save();
 
-                return view('view_question', ["categories" => $cat_array, "question" => $question, "replies" => $replies ])->withSuccess("Reply posted.");
+                return view('view_question', ["categories" => $cat_array, "question" => $question, "replies" => $replies ])->withSuccess("Your reply has been posted.");
                 
             }
 
@@ -181,7 +189,15 @@ class QuestionController extends Controller
                 'category' => 'required|exists:categories,id',
                 'question' => 'required',
                 'g-recaptcha-response' => 'required',
-            ]);
+            ],
+            [   
+                'name.required'    => 'Please enter your Name',
+                'title.required'      => 'Please enter the question title',
+                'category.required' => 'Please select the question category.',
+                'category.exists' => 'Please select a valid question category.',
+                'g-recaptcha-response.required' => 'Please solve the captcha.',
+            ]
+        );
 
 
             $response = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
@@ -199,14 +215,13 @@ class QuestionController extends Controller
                     "slug" => Str::slug($form['title'], '-')
                 ]);
     
-                return view('askquestion', ["categories" => $cat_array])->withSuccess("Question posted.");
+                return view('askquestion', ["categories" => $cat_array])->withSuccess("Your question is saved and awaiting for approval.");
             }else{
-                return view('askquestion', ["categories" => $cat_array])->with('custom_error', "Invalid Captcha");
+                return view('askquestion', ["categories" => $cat_array])->with('custom_error', "Invalid Captcha!");
             }
 
         }
 
-        
         return view('askquestion', ["categories" => $cat_array]);
     }
 }

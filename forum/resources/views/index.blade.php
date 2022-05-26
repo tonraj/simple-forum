@@ -1,4 +1,4 @@
-@extends('layout.mainlayout', ["title" => "dsas"])
+@extends('layout.mainlayout', ["title" => env('MAIN_TITLE'), "description" => env('META_DESCRIPTION') ])
 @section('content')
 
 <div class=" d-md-none  d-lg-none">
@@ -32,9 +32,8 @@
                 <div class="d-none d-sm-block">
                     <div class="inner-main-header justify-content-between ">
                         <select id="order_by" class="custom-select custom-select-sm w-auto mr-1">
-                            <option @if(Request()->order_by=='') selected @endif selected></option>
                             <option @if(Request()->order_by=='latest_question') selected @endif value="latest_question">Latest</option>
-                            <option @if(Request()->order_by=='latest_activity') selected @endif value="latest_activity">Recent Activity</option>
+                            <option @if(Request()->order_by=='latest_activity' || Request()->order_by=='' || Request()->order_by==null) selected @endif value="latest_activity">Recent Activity</option>
                         </select>
                         <form>
                         <div class="input-group input-icon input-icon-sm ml-auto w-auto">
@@ -66,9 +65,8 @@
                         <div class="">
                             <label>Sort by :</label>
                             <select id="order_by_s" class="custom-select custom-select-sm w-auto mr-1">
-                                <option @if(Request()->order_by=='') selected @endif selected></option>
-                                <option @if(Request()->order_by=='latest_question') selected @endif value="latest_question">Latest</option>
-                                <option @if(Request()->order_by=='latest_activity') selected @endif value="latest_activity">Recent Activity</option>
+                            <option @if(Request()->order_by=='latest_question') selected @endif value="latest_question">Latest</option>
+                            <option @if(Request()->order_by=='latest_activity' || Request()->order_by=='' || Request()->order_by==null) selected @endif value="latest_activity">Recent Activity</option>
                             </select>
                         </div>
 

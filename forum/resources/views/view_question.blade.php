@@ -1,4 +1,4 @@
-@extends('layout.mainlayout', ["title" => "Question"])
+@extends('layout.mainlayout', ["title" => $question->title, 'description' => Str::limit($question->content, 150, '')])
 @section('content')
 <div class="d-md-none  d-lg-none bg-primary p-2">
     <div class="d-flex align-items-center justify-content-between">

@@ -12,8 +12,10 @@ class HomeController extends Controller
     function suggestion(Request $request){
 
         $all_questions = QuestionsModel::where(
-            [['status' , "=", "Approved"],
-            ['title',  "like", "%".  $request->subject ."%"]]
+            [
+                ['status' , "=", "Approved"],
+                ['title',  "like", "%".  $request->subject ."%"]
+            ]
         )->get();
         
         return response()->json($all_questions);
@@ -56,16 +58,16 @@ class HomeController extends Controller
         $order = $request->query('order_by');
 
         if($query != null){
-            $build = QuestionsModel::where('subject', 'like', $query);
+            $build = QuestionsModel::where('title', 'like', $query)->where("status", "Approved");
         }else{
-            $build = new QuestionsModel();
+            $build = QuestionsModel::where("status", "Approved");
         }
 
         if($order == "latest_question"){
             $build = $build->orderBy('id','DESC');
         }
 
-        if($order == "latest_activity"){
+        if($order == "latest_activity" || $order == null || $order == ""){
             $build = $build->orderBy('updated_at','DESC');
         }
 

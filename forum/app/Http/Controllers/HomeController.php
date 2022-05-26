@@ -13,7 +13,7 @@ class HomeController extends Controller
 
         $all_questions = QuestionsModel::where(
             [['status' , "=", "Approved"],
-            ['subject',  "like", "%".  $request->subject ."%"]]
+            ['title',  "like", "%".  $request->subject ."%"]]
         )->get();
         
         return response()->json($all_questions);
@@ -24,8 +24,6 @@ class HomeController extends Controller
         $all_questions = QuestionsModel::where(
             'status' , "Approved"
         )->get();
-
-
 
         return response()->view('sitemap ', [
             "questions" => $all_questions
@@ -71,7 +69,7 @@ class HomeController extends Controller
             $build = $build->orderBy('updated_at','DESC');
         }
 
-        $question = $build->paginate(1);
+        $question = $build->paginate(20);
 
         return view('index', ["categories" => $cat_array, "questions" => $question]);
     }

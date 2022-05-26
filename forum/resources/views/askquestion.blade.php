@@ -49,12 +49,15 @@
                         <label for="exampleInputEmail1">Your Name</label>
                         <input  type="text" class="form-control" name="name" id="exampleInputEmail1" aria-describedby="emailHelp">
                     </div>
+
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Title</label>
+                        <input  type="text" class="form-control" name="title" id="subject" aria-describedby="emailHelp">
+                    </div>
                     
                     <div id="suggested" style="display:none" class="my-3">
                         <b>Similar Questions</b>
-                        <ul id="suggested_item">
-
-                        </ul>
+                        <ul id="suggested_item"></ul>
                     </div>
                     
                     {!! csrf_field() !!}

@@ -142,9 +142,9 @@
                             <div class="media forum-item">
                             
                                 <div class="media-body">
-                                    <h6><span class="text-muted">Posted by {{$question->name}}</span></h6>
+                                    <h6><a  href='{{ URL::route("view_question_route", [$question->slug, $question->id]) }}'> <span >{{$question->title}}</span></a></h6>
                                     <p class="text-secondary">
-                                    <a  href="/question/{{$question->id}}">{!! Str::limit($question->content, 150, ' ...') !!}</a>
+                                        {!! Str::limit($question->content, 150, ' ...') !!}
                                     </p>
                                     
                                     <p class="text-muted">last reply <span class="text-secondary font-weight-bold">
@@ -152,8 +152,10 @@
                                     </span></p>
                                 </div>
                                 <div class="text-muted small text-center align-self-center">
+                                <span class="text-muted mr-2"><i class="fa fa-user mr-1"></i> {{$question->name}}</span>
                                 <span class="badge badge-primary"><a href="/category/{{$question->category->slug}}/{{$question->category->id}}">{{$question->category->name}}</a></span>
                                     <span><i class="far fa-clock ml-2"></i> {{$question->created_at->diffForHumans()}}</span> 
+                                    
                                 </div>
                             </div>
                         </div>
@@ -164,9 +166,9 @@
                             <div class="media forum-item">
                             
                                 <div class="media-body">
-                                    <h6><span class="text-muted">Posted by {{$question->name}}</span></h6>
+                                    <h6><a  href='{{ URL::route("view_question_route", [$question->slug, $question->id]) }}'> <span >{{$question->title}}</span></a></h6>
                                     <p class="text-secondary">
-                                    <a  href="/question/{{$question->id}}">{!! Str::limit($question->content, 150, ' ...') !!}</a>
+                                        {!! Str::limit($question->content, 150, ' ...') !!}
                                     </p>
                                     
                                     <p class="text-muted">last reply <span class="text-secondary font-weight-bold">
@@ -176,6 +178,7 @@
                                
                             </div>
                             <div class="text-muted small align-self-center">
+                            <span class="text-muted mr-2"><i class="fa fa-user mr-1"></i> {{$question->name}}</span>
                                 <span class="badge badge-primary"><a href="/category/{{$question->category->slug}}/{{$question->category->id}}">{{$question->category->name}}</a></span>
                                     <span><i class="far fa-clock ml-2"></i> {{$question->created_at->diffForHumans()}}</span> 
                                 </div>

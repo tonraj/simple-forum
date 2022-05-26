@@ -21,7 +21,7 @@ Route::get('/suggestion', [HomeController::class, "suggestion"]);
 Route::get('/sitemap.xml', [HomeController::class, "sitemap"]);
 Route::match(['get', 'post'], '/ask_question', [QuestionController::class, "ask_question"]);
 Route::get('/category/{slug}/{id}', [QuestionController::class, "category_result"]);
-Route::match(['get', 'post'], '/question/{id}', [QuestionController::class, "view_question"])->name("view_question_route");
+Route::match(['get', 'post'], '/question/{slug}/{id}', [QuestionController::class, "view_question"])->name("view_question_route");
 
 Route::get('/search/', function () {
     return view('searchresult');

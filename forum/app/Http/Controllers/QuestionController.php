@@ -7,6 +7,8 @@ use App\Models\CategoryModel;
 use App\Models\ReplyModel;
 use App\Models\ReplyReply;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
+use Illuminate\Support\Carbon;
 
 class QuestionController extends Controller
 {
@@ -64,7 +66,7 @@ class QuestionController extends Controller
         return view('index', ["categories" => $cat_array, "questions" => $question, 'category' => $category]);
     }
 
-    function view_question(Request $request, $id){
+    function view_question(Request $request, $slug, $id){
 
         $get_all_categories = CategoryModel::all();
         $cat_array = array();
@@ -85,7 +87,7 @@ class QuestionController extends Controller
             }
         }
 
-        $question = QuestionsModel::find($id);
+        $question = QuestionsModel::where("id", $id)->where('slug', $slug)->firstOrFail();
 
         if($request->method() == "POST"){
             
@@ -104,7 +106,11 @@ class QuestionController extends Controller
 
                 $replies = ReplyModel::where('discussion_id', $id)->orderBy('id', "DESC")->paginate(5);
 
-                return view('view_question', ["categories" => $cat_array, "question" => $question, "replies" => $replies ])->withSuccess("Comment posted.");
+                $question->updated_at = Carbon::now();
+                $question->save();
+                
+
+                return view('view_question', ["categories" => $cat_array, "question" => $question, "replies" => $replies ])->withSuccess("Answer posted.");
     
             }
 
@@ -124,6 +130,9 @@ class QuestionController extends Controller
                 ]);
                 
                 $replies = ReplyModel::where('discussion_id', $id)->orderBy('id', "DESC")->paginate(5);
+
+                $question->updated_at = Carbon::now();
+                $question->save();
 
                 return view('view_question', ["categories" => $cat_array, "question" => $question, "replies" => $replies ])->withSuccess("Reply posted.");
                 
@@ -167,7 +176,8 @@ class QuestionController extends Controller
             
             
             $form = $this->validate($request, [
-                'name' => 'required|max:255',
+                'name' => 'required|max:75',
+                'title' => 'required|max:255',
                 'category' => 'required|exists:categories,id',
                 'question' => 'required',
                 'g-recaptcha-response' => 'required',
@@ -182,9 +192,11 @@ class QuestionController extends Controller
             if($response->ok() && $response->json()['success'] == true){
                 QuestionsModel::create([
                     "name" => $form['name'],
+                    "title" => $form['title'],
                     "category_id" => $form['category'],
                     "content" => $form['question'],
                     "status" => "Pending",
+                    "slug" => Str::slug($form['title'], '-')
                 ]);
     
                 return view('askquestion', ["categories" => $cat_array])->withSuccess("Question posted.");

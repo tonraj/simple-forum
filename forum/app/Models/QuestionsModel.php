@@ -16,9 +16,10 @@ class QuestionsModel extends Model
     use HasFactory;
 
     protected $fillable = [
-        "subject",
+        'title',
         "category_id",
         "status",
+        "slug",
         "content",
         "name"
     ];

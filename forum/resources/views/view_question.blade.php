@@ -51,8 +51,7 @@
                             </div>
                         @endisset
 
-
-                            <h2 class="mt-2" > {{$question->subject}} </h2>
+                            <h2 class="mt-2" > {{$question->title}} </h2>
                             <p>{{$question->content}}</p>
 
                             <small class="mr-2"> <span class="text-muted"><i class="fa fa-user mr-1"></i> {{$question->name}}</span></small>

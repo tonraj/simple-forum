@@ -19,6 +19,7 @@ class Discussion extends Migration
             $table->foreign('category_id')->references('id')->on('categories');
             $table->enum('status', ['Pending', 'Approved']);
             $table->string('name');
+            $table->string('title');
             $table->string('slug')->nullable();
             $table->text('content');
             $table->timestamps();

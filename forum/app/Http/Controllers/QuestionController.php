@@ -184,7 +184,7 @@ class QuestionController extends Controller
             ]);
 
 
-            $response = Http::post('https://www.google.com/recaptcha/api/siteverify', [
+            $response = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
                 'secret' => '6LdwXBQgAAAAACUAYEbc5Hbl3_-YdFI4PRHm4Z9Q',
                 'response' => $form['g-recaptcha-response'],
             ]);

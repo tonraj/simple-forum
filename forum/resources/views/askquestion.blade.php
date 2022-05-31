@@ -49,11 +49,6 @@
                         <label for="exampleInputEmail1">Your Name</label>
                         <input  type="text" class="form-control" name="name" id="exampleInputEmail1" aria-describedby="emailHelp">
                     </div>
-
-                    <div class="form-group">
-                        <label for="exampleInputEmail1">Title</label>
-                        <input  type="text" class="form-control" name="title" id="subject" aria-describedby="emailHelp">
-                    </div>
                     
                     <div id="suggested" style="display:none" class="my-3">
                         <b>Similar Questions</b>
@@ -66,12 +61,8 @@
                         <label for="exampleInputEmail1">Question Category</label>
                         <select type="text" class="form-control" name="category" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="">
                             <option value=""></option>
-                            @foreach ($categories as $name => $value)
-                                <optgroup label="{{$name}}">
-                                    @foreach ($value as $subcat)
-                                        <option value="{{ $subcat[0] }}">{{ $subcat[1] }}</option>
-                                    @endforeach
-                                </optgroup>
+                            @foreach ($categories as $category)
+                                <option value="{{ $category->id }}">{{ $category->name }}</option>  
                             @endforeach
                            
                         </select>

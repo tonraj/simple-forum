@@ -1,4 +1,4 @@
-@extends('layout.mainlayout', ["title" => $question->title, 'description' => Str::limit($question->content, 150, '')])
+@extends('layout.mainlayout', ["title" => $question->content, 'description' => Str::limit($question->content, 150, '')])
 @section('content')
 <div class="d-md-none  d-lg-none bg-primary p-2">
     <div class="d-flex align-items-center justify-content-between">
@@ -51,8 +51,7 @@
                             </div>
                         @endisset
 
-                            <h2 class="mt-2" > {{$question->title}} </h2>
-                            <p>{{$question->content}}</p>
+                            <h2 class="mt-2" > {{$question->content}} </h2>
 
                             <small class="mr-2"> <span class="text-muted"><i class="fa fa-user mr-1"></i> {{$question->name}}</span></small>
                             <small class="mr-2"> <span class="text-muted"><i class="fa fa-clock mr-1"></i> {{$question->created_at->diffForHumans()}}</span></small>

@@ -18,20 +18,18 @@
                                         <div class="simplebar-content" style="padding: 16px;">
                                             <nav class="nav nav-pills nav-gap-y-1 flex-column">
 
-                                            @foreach ($categories as $name => $value)
                                                 <a href="javascript:void(0)" class="nav-link nav-link-faded has-icon active mb-0">
-                                                    {{$name}} 
+                                                    Categories
                                                 </a>
                                                 <div class="nav-link nav-link-faded has-icon mt-0 p-2 pt-3">
                                                 <ul>
-                                                    @foreach ($value as $subcat)
-                                                        <li><a href="/category/{{ $subcat[1] }}/{{ $subcat[0] }}">{{ $subcat[2] }}</a></li>
+                                                    @foreach ($categories as $cat)
+                                                        <li><a href="/category/{{  $cat->id }}/{{  $cat->slug }}">{{  $cat->name }}</a></li>
                                                     @endforeach
                                                 </ul>
                                                 </div>
 
                                                 </optgroup>
-                                            @endforeach
                                             </nav>
                                         </div>
                                     </div>

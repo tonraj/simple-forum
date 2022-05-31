@@ -108,20 +108,19 @@
                 <div class="collapse" id="collapseExample">
                         <nav class="nav nav-pills nav-gap-y-1 flex-column">
 
-                        @foreach ($categories as $name => $value)
+                        
                             <a href="javascript:void(0)" class="nav-link nav-link-faded has-icon active mb-0">
-                                {{$name}} 
+                                Categories
                             </a>
                             <div class="nav-link nav-link-faded has-icon mt-0 p-2 pt-3">
                             <ul>
-                                @foreach ($value as $subcat)
-                                    <li><a href="/category/{{ $subcat[1] }}/{{ $subcat[0] }}">{{ $subcat[1] }}</a></li>
+                                @foreach ($categories as $category)
+                                    <li><a href="/category/{{ $category->id }}/{{ $category->slug }}">{{ $category->name }}</a></li>
                                 @endforeach
                             </ul>
                             </div>
 
                             </optgroup>
-                        @endforeach
                         </nav>
                 </div>
 
@@ -140,10 +139,8 @@
                             <div class="media forum-item">
                             
                                 <div class="media-body">
-                                    <h6><a  href='{{ URL::route("view_question_route", [$question->slug, $question->id]) }}'> <span >{{$question->title}}</span></a></h6>
-                                    <p class="text-secondary">
-                                        {!! Str::limit($question->content, 150, ' ...') !!}
-                                    </p>
+                                    <h6><a  href='{{ URL::route("view_question_route", [ $question->id, $question->slug]) }}'> <span >{{$question->content}}</span></a></h6>
+                                  
                                     
                                     <p class="text-muted">last reply <span class="text-secondary font-weight-bold">
                                         {{$question->updated_at->diffForHumans()}}
@@ -164,10 +161,8 @@
                             <div class="media forum-item">
                             
                                 <div class="media-body">
-                                    <h6><a  href='{{ URL::route("view_question_route", [$question->slug, $question->id]) }}'> <span >{{$question->title}}</span></a></h6>
-                                    <p class="text-secondary">
-                                        {!! Str::limit($question->content, 150, ' ...') !!}
-                                    </p>
+                                    <h6><a  href='{{ URL::route("view_question_route", [$question->slug, $question->id]) }}'> <span >{{$question->content}}</span></a></h6>
+                                   
                                     
                                     <p class="text-muted">last reply <span class="text-secondary font-weight-bold">
                                         {{$question->updated_at->diffForHumans()}}

@@ -15,10 +15,4 @@ class CategoryModel extends Model
     protected $table = 'categories';
     use HasFactory;
 
-    public function main_category()
-    {
-        return $this->hasOne(CategoryModel::class, 'id', 'parent_id');
-    }
-
-
 }

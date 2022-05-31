@@ -17,26 +17,6 @@ class QuestionController extends Controller
 
 
         $get_all_categories = CategoryModel::all();
-        $cat_array = array();
-
-        foreach($get_all_categories as $item){
-            if($item->parent_id == null){
-                if(!array_key_exists($item->name, $cat_array)){
-                    $cat_array[$item->name] = array();
-                }
-            }else{
-                $parent = CategoryModel::where('parent_id', $item->parent_id)->first();
-
-                if(!array_key_exists($parent->main_category->name, $cat_array)){
-                    $cat_array[$parent->main_category->name] = array();
-                }
-
-                array_push($cat_array[$parent->main_category->name], array($item->id, $item->slug, $item->name));
-            }
-        }
-        
-
-
 
         $query = $request->query('q');
         $order = $request->query('order_by');
@@ -47,7 +27,7 @@ class QuestionController extends Controller
         });
 
         if($query != null){
-            $build = $build->where('title', 'like', '%' . $query . '%');
+            $build = $build->where('content', 'like', '%' . $query . '%');
         }
 
         if($order == "latest_question"){
@@ -63,30 +43,13 @@ class QuestionController extends Controller
         $category = CategoryModel::find($id);
 
 
-        return view('index', ["categories" => $cat_array, "questions" => $question, 'category' => $category]);
+        return view('index', ["categories" => $get_all_categories, "questions" => $question, 'category' => $category]);
     }
 
-    function view_question(Request $request, $slug, $id){
+    function view_question(Request $request, $id, $slug){
 
         $get_all_categories = CategoryModel::all();
-        $cat_array = array();
-
-        foreach($get_all_categories as $item){
-            if($item->parent_id == null){
-                if(!array_key_exists($item->name, $cat_array)){
-                    $cat_array[$item->name] = array();
-                }
-            }else{
-                $parent = CategoryModel::where('parent_id', $item->parent_id)->first();
-
-                if(!array_key_exists($parent->main_category->name, $cat_array)){
-                    $cat_array[$parent->main_category->name] = array();
-                }
-
-                array_push($cat_array[$parent->main_category->name], array($item->id, $item->slug, $item->name));
-            }
-        }
-
+        
         $question = QuestionsModel::where("id", $id)->where('slug', $slug)->firstOrFail();
 
         if($request->method() == "POST"){
@@ -113,7 +76,7 @@ class QuestionController extends Controller
                 $question->save();
                 
 
-                return view('view_question', ["categories" => $cat_array, "question" => $question, "replies" => $replies ])->withSuccess("Your Answer has been posted.");
+                return view('view_question', ["categories" => $get_all_categories, "question" => $question, "replies" => $replies ])->withSuccess("Your Answer has been posted.");
     
             }
 
@@ -142,7 +105,7 @@ class QuestionController extends Controller
                 $question->updated_at = Carbon::now();
                 $question->save();
 
-                return view('view_question', ["categories" => $cat_array, "question" => $question, "replies" => $replies ])->withSuccess("Your reply has been posted.");
+                return view('view_question', ["categories" => $get_all_categories, "question" => $question, "replies" => $replies ])->withSuccess("Your reply has been posted.");
                 
             }
 
@@ -152,7 +115,7 @@ class QuestionController extends Controller
         $replies = ReplyModel::where('discussion_id', $id)->orderBy('id', "DESC")->paginate(5);
     
 
-        return view('view_question', ["categories" => $cat_array, "question" => $question, "replies" => $replies]);
+        return view('view_question', ["categories" => $get_all_categories, "question" => $question, "replies" => $replies]);
 
 
     }
@@ -161,38 +124,19 @@ class QuestionController extends Controller
     function ask_question(Request $request){
 
         $get_all_categories = CategoryModel::all();
-        $cat_array = array();
-
-        foreach($get_all_categories as $item){
-            if($item->parent_id == null){
-                if(!array_key_exists($item->name, $cat_array)){
-                    $cat_array[$item->name] = array();
-                }
-            }else{
-                $parent = CategoryModel::where('parent_id', $item->parent_id)->first();
-
-                if(!array_key_exists($parent->main_category->name, $cat_array)){
-                    $cat_array[$parent->main_category->name] = array();
-                }
-
-                array_push($cat_array[$parent->main_category->name], array($item->id, $item->slug, $item->name));
-            }
-        }
-
+      
 
         if($request->method() == "POST"){
             
             
             $form = $this->validate($request, [
                 'name' => 'required|max:75',
-                'title' => 'required|max:255',
                 'category' => 'required|exists:categories,id',
                 'question' => 'required',
                 'g-recaptcha-response' => 'required',
             ],
             [   
                 'name.required'    => 'Please enter your Name',
-                'title.required'      => 'Please enter the question title',
                 'category.required' => 'Please select the question category.',
                 'category.exists' => 'Please select a valid question category.',
                 'g-recaptcha-response.required' => 'Please solve the captcha.',
@@ -208,20 +152,19 @@ class QuestionController extends Controller
             if($response->ok() && $response->json()['success'] == true){
                 QuestionsModel::create([
                     "name" => $form['name'],
-                    "title" => $form['title'],
                     "category_id" => $form['category'],
                     "content" => $form['question'],
                     "status" => "Pending",
-                    "slug" => Str::slug($form['title'], '-')
+                    "slug" => Str::slug($form['question'], '-')
                 ]);
     
-                return view('askquestion', ["categories" => $cat_array])->withSuccess("Your question is saved and awaiting for approval.");
+                return view('askquestion', ["categories" => $get_all_categories])->withSuccess("Your question is saved and awaiting for approval.");
             }else{
-                return view('askquestion', ["categories" => $cat_array])->with('custom_error', "Invalid Captcha!");
+                return view('askquestion', ["categories" => $get_all_categories])->with('custom_error', "Invalid Captcha!");
             }
 
         }
 
-        return view('askquestion', ["categories" => $cat_array]);
+        return view('askquestion', ["categories" => $get_all_categories]);
     }
 }

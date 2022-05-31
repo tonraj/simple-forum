@@ -28,7 +28,7 @@
                 $('#suggested').show();
                 var wrap = "";
                 result.forEach(function(item){
-                    wrap += '<li><a href="/question/' + item["slug"] + '/' + item["id"] + '">' + item["title"]  +  '</a></li>';
+                    wrap += '<li><a href="/question/' + item["id"] + '-' + item["slug"] + '/'">' + item["title"]  +  '</a></li>';
                 });
 
                 $('#suggested_item').html(wrap);
